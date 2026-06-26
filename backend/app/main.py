@@ -17,6 +17,7 @@ from .database import (
     save_parametros,
     save_programacoes,
 )
+from .routes.import_routes import router as import_router
 from .schemas import ImportResult, ManualMappingRequest, ParametroOperacional, SuggestionRequest
 from .services.excel_reader import read_workbook, rows_to_domain
 from .services.exporter import programacoes_to_excel, programacoes_to_printable_html
@@ -32,6 +33,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(import_router)
 
 
 @app.on_event("startup")

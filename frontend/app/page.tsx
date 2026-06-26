@@ -12,6 +12,7 @@ import {
   salvarParametros,
   sugerirProgramacoes,
 } from "../lib/api";
+import { ImportWizard } from "../components/import/ImportWizard";
 import type { Colaborador, ImportResult, ParametroOperacional, PeriodoFerias, ProgramacaoSugerida } from "../lib/types";
 
 type FilterState = {
@@ -204,13 +205,16 @@ export default function Home() {
       {message && <div className="card muted">{loading ? "Carregando... " : null}{message}</div>}
 
       {tab === "importacao" && (
-        <ImportacaoTab
-          importResult={importResult}
-          manualMapping={manualMapping}
-          onImport={handleImport}
-          onMappingChange={setManualMapping}
-          onApplyMapping={handleManualMapping}
-        />
+        <div className="stack">
+          <ImportWizard />
+          <ImportacaoTab
+            importResult={importResult}
+            manualMapping={manualMapping}
+            onImport={handleImport}
+            onMappingChange={setManualMapping}
+            onApplyMapping={handleManualMapping}
+          />
+        </div>
       )}
 
       {tab === "parametros" && (
