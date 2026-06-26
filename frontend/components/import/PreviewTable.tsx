@@ -1,8 +1,9 @@
 type PreviewTableProps = {
   rows: Record<string, unknown>[];
+  highlightedRowNumber?: number;
 };
 
-export function PreviewTable({ rows }: PreviewTableProps) {
+export function PreviewTable({ rows, highlightedRowNumber }: PreviewTableProps) {
   if (!rows.length) {
     return <p className="muted">Nenhuma linha para exibir.</p>;
   }
@@ -21,7 +22,7 @@ export function PreviewTable({ rows }: PreviewTableProps) {
         </thead>
         <tbody>
           {rows.map((row, index) => (
-            <tr key={index}>
+            <tr className={Number(row["Linha"]) === highlightedRowNumber ? "detected-header" : ""} key={index}>
               {headers.map((header) => (
                 <td key={header}>{String(row[header] ?? "")}</td>
               ))}

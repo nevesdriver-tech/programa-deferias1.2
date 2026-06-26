@@ -76,6 +76,12 @@ th {
   text-transform: uppercase;
 }
 
+tr.detected-header td {
+  background: #dbeafe;
+  color: #1e3a8a;
+  font-weight: 700;
+}
+
 .container {
   max-width: 1440px;
   margin: 0 auto;
@@ -147,6 +153,15 @@ th {
 .stack {
   display: grid;
   gap: 12px;
+}
+
+.detection-summary {
+  display: grid;
+  gap: 6px;
+}
+
+.detection-summary p {
+  margin: 0;
 }
 
 .table-wrap {

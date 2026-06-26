@@ -7,10 +7,19 @@ export type WorksheetPreview = {
   preview: Record<string, unknown>[];
 };
 
+export type TableDetection = {
+  worksheet: string;
+  headerRow: number;
+  dataStartRow: number;
+  lastRow: number;
+  confidence: number;
+};
+
 export type ImportUploadResponse = {
   fileName: string;
   fileType: string;
   worksheets: WorksheetPreview[];
+  tableDetection: TableDetection;
   errors: string[];
 };
 

@@ -6,6 +6,7 @@ from typing import Any
 from fastapi import HTTPException, UploadFile
 from pydantic import BaseModel, Field
 
+from .table_detector import detect_main_table
 from .worksheet_detector import detect_worksheets
 
 
@@ -19,10 +20,19 @@ class WorksheetPreview(BaseModel):
     preview: list[dict[str, Any]] = Field(default_factory=list)
 
 
+class TableDetection(BaseModel):
+    worksheet: str
+    headerRow: int
+    dataStartRow: int
+    lastRow: int
+    confidence: float
+
+
 class ImportUploadResponse(BaseModel):
     fileName: str
     fileType: str
     worksheets: list[WorksheetPreview]
+    tableDetection: TableDetection
     errors: list[str] = Field(default_factory=list)
 
 
@@ -39,7 +49,9 @@ async def import_preview_from_upload(file: UploadFile) -> ImportUploadResponse:
         raise HTTPException(status_code=400, detail="Arquivo vazio.")
 
     try:
-        worksheets = detect_worksheets(file.filename, content)
+        table_detection = detect_main_table(file.filename, content)
+        preview_rows = max(8, int(table_detection.get("headerRow", 0)) + 5)
+        worksheets = detect_worksheets(file.filename, content, preview_rows=preview_rows)
     except Exception as exc:
         raise HTTPException(status_code=400, detail=f"Nao foi possivel ler o arquivo: {exc}") from exc
 
@@ -47,4 +59,5 @@ async def import_preview_from_upload(file: UploadFile) -> ImportUploadResponse:
         fileName=file.filename,
         fileType=suffix.lstrip("."),
         worksheets=[WorksheetPreview(**worksheet) for worksheet in worksheets],
+        tableDetection=TableDetection(**table_detection),
     )
